@@ -1,25 +1,42 @@
 package entity;
 
-//import javax.persistence.*;
-import java.time.LocalDate;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Objects;
-//@Entity
-//@Table
+
+@Entity
+@Table(name = "flight")
 public class Flight {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "crew_id")
     private Crew crew;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id")
     private Client client;
-    private LocalDate sending;
-    private LocalDate getting;
+
+    @NotNull
+    @Column(name = "sending")
+    private LocalDateTime sending;
+
+    @NotNull
+    @Column(name = "getting")
+    private LocalDateTime getting;
 
     public Flight() {
     }
 
-    public Flight(int id, Vehicle vehicle, Crew crew, Client client, LocalDate sending, LocalDate getting) {
-        this.id = id;
+    public Flight(Vehicle vehicle, Crew crew, Client client, LocalDateTime sending, LocalDateTime getting) {
         this.vehicle = vehicle;
         this.crew = crew;
         this.client = client;
@@ -27,11 +44,11 @@ public class Flight {
         this.getting = getting;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -59,19 +76,19 @@ public class Flight {
         this.client = client;
     }
 
-    public LocalDate getSending() {
+    public LocalDateTime getSending() {
         return sending;
     }
 
-    public void setSending(LocalDate sending) {
+    public void setSending(LocalDateTime sending) {
         this.sending = sending;
     }
 
-    public LocalDate getGetting() {
+    public LocalDateTime getGetting() {
         return getting;
     }
 
-    public void setGetting(LocalDate getting) {
+    public void setGetting(LocalDateTime getting) {
         this.getting = getting;
     }
 
@@ -80,7 +97,7 @@ public class Flight {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Flight flight = (Flight) o;
-        return id == flight.id &&
+        return Objects.equals(id, flight.id) &&
                 Objects.equals(vehicle, flight.vehicle) &&
                 Objects.equals(crew, flight.crew) &&
                 Objects.equals(client, flight.client) &&
@@ -102,7 +119,6 @@ public class Flight {
                 ", client=" + client +
                 ", sending=" + sending +
                 ", getting=" + getting +
-                ", status=" +
                 '}';
     }
 }

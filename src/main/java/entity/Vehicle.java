@@ -1,34 +1,46 @@
 package entity;
 
-//import javax.persistence.*;
+import javax.persistence.*;
 import java.util.Objects;
-//@Entity
-//@Table(name = "")
+
+@Entity
+@Table(name = "vehicle")
 public class Vehicle {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @Column(name = "max_speed")
     private int maxSpeed;
+
+    @Column(name = "numberplate", unique = true)
     private String numberplate;
+
+    @Column(name = "carrying")
     private int carrying;
+
+    @Column(name = "gas_mileage")
     private int gasMileage;
+
+    @OneToOne(mappedBy = "vehicle", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Flight flight;
 
     public Vehicle() {
     }
 
-    public Vehicle(int id, int maxSpeed, String numberplate, int carrying, int gasMileage) {
-        this.id = id;
+    public Vehicle(int maxSpeed, String numberplate, int carrying, int gasMileage, Flight flight) {
         this.maxSpeed = maxSpeed;
         this.numberplate = numberplate;
         this.carrying = carrying;
         this.gasMileage = gasMileage;
+        this.flight = flight;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -64,21 +76,30 @@ public class Vehicle {
         this.gasMileage = gasMileage;
     }
 
+    public Flight getFlight() {
+        return flight;
+    }
+
+    public void setFlight(Flight flight) {
+        this.flight = flight;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vehicle vehicle = (Vehicle) o;
-        return id == vehicle.id &&
-                maxSpeed == vehicle.maxSpeed &&
+        return maxSpeed == vehicle.maxSpeed &&
                 carrying == vehicle.carrying &&
                 gasMileage == vehicle.gasMileage &&
-                Objects.equals(numberplate, vehicle.numberplate);
+                Objects.equals(id, vehicle.id) &&
+                Objects.equals(numberplate, vehicle.numberplate) &&
+                Objects.equals(flight, vehicle.flight);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, maxSpeed, numberplate, carrying, gasMileage);
+        return Objects.hash(id, maxSpeed, numberplate, carrying, gasMileage, flight);
     }
 
     @Override
@@ -89,6 +110,7 @@ public class Vehicle {
                 ", numberplate='" + numberplate + '\'' +
                 ", carrying=" + carrying +
                 ", gasMileage=" + gasMileage +
+                ", flight=" + flight +
                 '}';
     }
 }

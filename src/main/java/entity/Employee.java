@@ -1,37 +1,57 @@
 package entity;
 
-//import javax.persistence.*;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Objects;
-//@Entity
-//@Table(name = "")
+
+@Entity
+@Table(name = "employee")
 public class Employee {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @NotNull
+    @Column(name = "employee", unique = true)
     private String passport;
+
+    @NotNull
+    @Column(name = "age")
     private int age;
+
+    @Column(name = "address")
     private String address;
+
+    @NotNull
+    @Column(name = "placement")
     private LocalDate placement;
+
+    @NotNull
+    @Column(name = "salary")
     private int salary;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "crew_id")
+    private Crew crew;
 
     public Employee() {
     }
 
-    public Employee(int id, String passport, int age, String address, LocalDate placement, int salary) {
-        this.id = id;
+    public Employee(String passport, int age, String address, LocalDate placement, int salary, Crew crew) {
         this.passport = passport;
         this.age = age;
         this.address = address;
         this.placement = placement;
         this.salary = salary;
+        this.crew = crew;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -75,22 +95,31 @@ public class Employee {
         this.salary = salary;
     }
 
+    public Crew getCrew() {
+        return crew;
+    }
+
+    public void setCrew(Crew crew) {
+        this.crew = crew;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return id == employee.id &&
-                age == employee.age &&
+        return age == employee.age &&
                 salary == employee.salary &&
+                Objects.equals(id, employee.id) &&
                 Objects.equals(passport, employee.passport) &&
                 Objects.equals(address, employee.address) &&
-                Objects.equals(placement, employee.placement);
+                Objects.equals(placement, employee.placement) &&
+                Objects.equals(crew, employee.crew);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, passport, age, address, placement, salary);
+        return Objects.hash(id, passport, age, address, placement, salary, crew);
     }
 
     @Override
@@ -102,6 +131,7 @@ public class Employee {
                 ", address='" + address + '\'' +
                 ", placement=" + placement +
                 ", salary=" + salary +
+                ", crew=" + crew +
                 '}';
     }
 }

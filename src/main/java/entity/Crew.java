@@ -1,47 +1,55 @@
 package entity;
 
-//import javax.persistence.*;
+import javax.persistence.*;
 import java.util.Objects;
-//@Entity
-//@Table(name = "")
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+@Entity
+@Table(name = "crew")
 public class Crew {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private Employee e1;
-    private Employee e2;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToMany(mappedBy = "crew", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Employee> employees;
+
+    @OneToOne(mappedBy = "crew", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Flight flight;
 
     public Crew() {
     }
 
-    public Crew(int id, Employee e1, Employee e2) {
-        this.id = id;
-        this.e1 = e1;
-        this.e2 = e2;
+    public Crew(Flight flight, Employee... employees) {
+        this.flight = flight;
+        this.employees = Stream.of(employees).collect(Collectors.toSet());
+        this.employees.forEach(x -> x.setCrew(this));
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Employee getE1() {
-        return e1;
+    public Set<Employee> getEmployees() {
+        return employees;
     }
 
-    public void setE1(Employee e1) {
-        this.e1 = e1;
+    public void setEmployees(Set<Employee> employees) {
+        this.employees = employees;
     }
 
-    public Employee getE2() {
-        return e2;
+    public Flight getFlight() {
+        return flight;
     }
 
-    public void setE2(Employee e2) {
-        this.e2 = e2;
+    public void setFlight(Flight flight) {
+        this.flight = flight;
     }
 
     @Override
@@ -49,22 +57,22 @@ public class Crew {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Crew crew = (Crew) o;
-        return id == crew.id &&
-                Objects.equals(e1, crew.e1) &&
-                Objects.equals(e2, crew.e2);
+        return Objects.equals(id, crew.id) &&
+                Objects.equals(employees, crew.employees) &&
+                Objects.equals(flight, crew.flight);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, e1, e2);
+        return Objects.hash(id, employees, flight);
     }
 
     @Override
     public String toString() {
         return "Crew{" +
                 "id=" + id +
-                ", e1=" + e1 +
-                ", e2=" + e2 +
+                ", employees=" + employees +
+                ", flight=" + flight +
                 '}';
     }
 }
