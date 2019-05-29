@@ -2,6 +2,7 @@ package entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -13,13 +14,24 @@ public class Employee {
     private Long id;
 
     @NotNull
-    @Column(name = "employee", unique = true)
+    @Column(name = "passport", unique = true)
     private String passport;
+
+    @NotNull
+    @Size(max = 64)
+    @Column(name = "name")
+    private String name;
+
+    @NotNull
+    @Size(max = 64)
+    @Column(name = "last_name")
+    private String lastName;
 
     @NotNull
     @Column(name = "age")
     private int age;
 
+    @Size(max = 128)
     @Column(name = "address")
     private String address;
 
@@ -38,8 +50,10 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(String passport, int age, String address, LocalDate placement, int salary, Crew crew) {
+    public Employee(@NotNull String passport, @NotNull String name, @NotNull String lastName, @NotNull int age, String address, @NotNull LocalDate placement, @NotNull int salary, Crew crew) {
         this.passport = passport;
+        this.name = name;
+        this.lastName = lastName;
         this.age = age;
         this.address = address;
         this.placement = placement;
@@ -99,6 +113,22 @@ public class Employee {
         return crew;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     public void setCrew(Crew crew) {
         this.crew = crew;
     }
@@ -112,6 +142,8 @@ public class Employee {
                 salary == employee.salary &&
                 Objects.equals(id, employee.id) &&
                 Objects.equals(passport, employee.passport) &&
+                Objects.equals(name, employee.name) &&
+                Objects.equals(lastName, employee.lastName) &&
                 Objects.equals(address, employee.address) &&
                 Objects.equals(placement, employee.placement) &&
                 Objects.equals(crew, employee.crew);
@@ -119,7 +151,7 @@ public class Employee {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, passport, age, address, placement, salary, crew);
+        return Objects.hash(id, passport, name, lastName, age, address, placement, salary, crew);
     }
 
     @Override
@@ -127,6 +159,8 @@ public class Employee {
         return "Employee{" +
                 "id=" + id +
                 ", passport='" + passport + '\'' +
+                ", name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", age=" + age +
                 ", address='" + address + '\'' +
                 ", placement=" + placement +
