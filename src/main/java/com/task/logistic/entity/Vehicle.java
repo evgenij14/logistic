@@ -83,6 +83,14 @@ public class Vehicle implements Serializable {
         this.gasMileage = gasMileage;
     }
 
+    public Flight getFlight() {
+        return flight;
+    }
+
+    public void setFlight(Flight flight) {
+        this.flight = flight;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

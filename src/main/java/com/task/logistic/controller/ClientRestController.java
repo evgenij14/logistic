@@ -1,4 +1,4 @@
-package com.task.logistic.controller.rest;
+package com.task.logistic.controller;
 
 import com.task.logistic.entity.Client;
 import com.task.logistic.service.ClientService;
@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * Контроллер для обслуживания таблицы клиентов
+ * (Controller for service the table of clients)
+ * Принимает запросы на url : "/client" (Accepts requests on url : "/client")
+ */
 @RestController
 @RequestMapping("/client")
 public class ClientRestController {
@@ -19,6 +24,13 @@ public class ClientRestController {
         this.clientService = clientService;
     }
 
+    /**
+     * Поиск клиента по имени и фамилии(Searching the client by name and surname)
+     *
+     * @param name     Имя искомого клиента(The name of searching client)
+     * @param lastName Фамилия искомого клиента(The surname of searching client)
+     * @return Возвращает найденного клиента в формате JSON + статус ответа(Return searched client on JSON + response status)
+     */
     @GetMapping("/get-by-name")
     public ResponseEntity<Client> getByNameAndLastName(@RequestParam(value = "name") String name,
                                                        @RequestParam(value = "lastname") String lastName) {
@@ -30,6 +42,11 @@ public class ClientRestController {
         }
     }
 
+    /**
+     * Поиск всех клиентов в БД(Searching all clients in Database)
+     *
+     * @return Список клиентов в формате JSON + статус ответа(The List of clients on JSON + response status)
+     */
     @GetMapping("/get-all")
     public ResponseEntity<List<Client>> getAll() {
         List<Client> clients = clientService.getAllClients();
@@ -40,6 +57,11 @@ public class ClientRestController {
         }
     }
 
+    /**
+     * Поиск клиента по id (Searching the client by id)
+     * @param id ID клиента (Client's ID)
+     * @return Найденный клиент в формате JSON + статус ответа(Return searched client on JSON + response status)
+     */
     @GetMapping("/get-by-id")
     public ResponseEntity<Client> getById(@RequestParam("id") Long id) {
         Client client = clientService.getById(id);
@@ -50,6 +72,13 @@ public class ClientRestController {
         }
     }
 
+    /**
+     * Сохранение клиента в базу данных (Saving the client in Database)
+     * @param client Объект клиента, сформированный на front-end (The object of client, which is formed on front-end)
+     * @param errors Возможные ошибки, которые могут возникнуть при формировании объекта клиента
+     *               (Possible errors that may occur during the formation of the client object)
+     * @return Возвращает сохраненного клиента в формате JSON + статус ответа (Return saved client on JSON + response status)
+     */
     @PostMapping("/save")
     public ResponseEntity<Client> save(@Valid @RequestBody Client client, Errors errors) {
         if (errors.hasErrors()) {
@@ -60,6 +89,11 @@ public class ClientRestController {
         }
     }
 
+    /**
+     * Удаление клиента из БД (Deleting the client from Database)
+     * @param id ID клиента (Client's id)
+     * @return Статус ответа (Response status)
+     */
     @DeleteMapping("/delete")
     public ResponseEntity<Client> delete(@RequestParam("id") Long id) {
         clientService.delete(id);

@@ -1,6 +1,6 @@
 package controller;
 
-import com.task.logistic.controller.rest.ClientRestController;
+import com.task.logistic.controller.ClientRestController;
 import com.task.logistic.entity.Client;
 import com.task.logistic.service.ClientService;
 import org.junit.Test;

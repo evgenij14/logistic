@@ -1,8 +1,14 @@
 package controller;
 
-import com.task.logistic.controller.rest.FlightRestController;
+import com.task.logistic.controller.FlightRestController;
+import com.task.logistic.entity.Client;
+import com.task.logistic.entity.Crew;
 import com.task.logistic.entity.Flight;
+import com.task.logistic.entity.Vehicle;
+import com.task.logistic.service.ClientService;
+import com.task.logistic.service.CrewService;
 import com.task.logistic.service.FlightService;
+import com.task.logistic.service.VehicleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -25,6 +31,24 @@ public class FlightControllerTest {
 
     @Mock
     private List<Flight> flights;
+
+    @Mock
+    private VehicleService vehicleService;
+
+    @Mock
+    private CrewService crewService;
+
+    @Mock
+    private ClientService clientService;
+
+    @Mock
+    private Crew crew;
+
+    @Mock
+    private Client client;
+
+    @Mock
+    private Vehicle vehicle;
 
     @Mock
     private Flight flight;
@@ -84,7 +108,10 @@ public class FlightControllerTest {
 
     @Test
     public void saveTest() {
-        ResponseEntity<Flight> out = flightController.save(12345L, 12345L, 12345L,
+        when(crewService.getById(anyLong())).thenReturn(crew);
+        when(clientService.getById(anyLong())).thenReturn(client);
+        when(vehicleService.getById(anyLong())).thenReturn(vehicle);
+        ResponseEntity<Flight> out = flightController.save(1L, 1L, 1L,
                 Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()));
         verify(flightService).save(any(Flight.class));
         assertEquals(out.getStatusCode(), HttpStatus.CREATED);

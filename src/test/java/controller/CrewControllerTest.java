@@ -1,9 +1,10 @@
 package controller;
 
-import com.task.logistic.controller.rest.CrewRestController;
+import com.task.logistic.controller.CrewRestController;
 import com.task.logistic.entity.Crew;
 import com.task.logistic.entity.Employee;
 import com.task.logistic.service.CrewService;
+import com.task.logistic.service.EmployeeService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,6 +25,12 @@ public class CrewControllerTest {
 
     @Mock
     private CrewService crewService;
+
+    @Mock
+    private EmployeeService employeeService;
+
+    @Mock
+    private List<Employee> employees;
 
     @Mock
     private List<Crew> crews;
@@ -62,5 +69,23 @@ public class CrewControllerTest {
         ResponseEntity<Crew> out = crewController.delete(anyLong());
         verify(crewService).delete(anyLong());
         assertEquals(out.getStatusCode(), HttpStatus.OK);
+    }
+
+    @Test
+    public void successGetEmployeesOfOneCrew() {
+        when(employeeService.getEmployeeInOneCrew(anyLong())).thenReturn(employees);
+        when(employees.isEmpty()).thenReturn(false);
+        ResponseEntity<List<Employee>> out = crewController.getEmployeesOfOneCrew(anyLong());
+        assertNotNull(out.getBody());
+        assertEquals(out.getStatusCode(), HttpStatus.OK);
+    }
+
+    @Test
+    public void failGetEmployeesOfOneCrew() {
+        when(employeeService.getEmployeeInOneCrew(anyLong())).thenReturn(employees);
+        when(employees.isEmpty()).thenReturn(true);
+        ResponseEntity<List<Employee>> out = crewController.getEmployeesOfOneCrew(anyLong());
+        assertNull(out.getBody());
+        assertEquals(out.getStatusCode(), HttpStatus.NOT_FOUND);
     }
 }

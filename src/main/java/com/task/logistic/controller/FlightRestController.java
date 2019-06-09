@@ -1,4 +1,4 @@
-package com.task.logistic.controller.rest;
+package com.task.logistic.controller;
 
 import com.task.logistic.entity.Flight;
 import com.task.logistic.service.ClientService;
@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.util.List;
 
+/**
+ * Контроллер для обслуживания таблицы рейсов (Controller for the maintenance of the table of flights)
+ * Принимает запросы на url : "/flight" (Accepts requests on url : "/flight")
+ */
 @RestController
 @RequestMapping("/flight")
 public class FlightRestController {
@@ -27,6 +31,11 @@ public class FlightRestController {
         this.crewService = crewService;
     }
 
+    /**
+     * Получение всех рейсов из БД (Getting all flights from Database)
+     *
+     * @return Возвращает список рейсов в формате JSON + статус ответа (Return List of flights on JSON + response status)
+     */
     @GetMapping("/get-all")
     public ResponseEntity<List<Flight>> getAll() {
         List<Flight> flights = flightService.getAllFlights();
@@ -37,6 +46,12 @@ public class FlightRestController {
         }
     }
 
+    /**
+     * Поиск рейса по ID (Searching the flight by id)
+     *
+     * @param id ID рейса (Flight's id)
+     * @return Возвращает объект рейса в формате JSON + статус ответа (Return flight's object on JSON + response status)
+     */
     @GetMapping("/get-by-id")
     public ResponseEntity<Flight> getById(@RequestParam("id") Long id) {
         Flight flight = flightService.getById(id);
@@ -47,6 +62,11 @@ public class FlightRestController {
         }
     }
 
+    /**
+     * Поиск рейса по ID клиента (Searching flight by client's id)
+     * @param id ID клиента (Client's id)
+     * @return Возвращает объект рейса в формате JSON + статус ответа (Return flight's object on JSON + response status)
+     */
     @GetMapping("/get-by-client-id")
     public ResponseEntity<Flight> getByClientId(@RequestParam("client_id") Long id) {
         Flight flight = flightService.getFlightByClientId(id);
@@ -57,6 +77,15 @@ public class FlightRestController {
         }
     }
 
+    /**
+     * Сохранение рейса в БД (Saving flight in Database)
+     * @param vehicleId ID ТС (Vehicle's id)
+     * @param crewId ID экипажа (Crew's id)
+     * @param clientId ID клиента (Client's id)
+     * @param sending Дата и время отправки (DateTime of sending)
+     * @param getting Дата и время доставки/получения (DateTime of getting)
+     * @return Возвращает сохраненный рейс в формате JSON + статус ответа (Return saved flight on JSON + response status)
+     */
     @PostMapping("/save")
     public ResponseEntity<Flight> save(@RequestParam("vehicle_id") Long vehicleId,
                                        @RequestParam("crew_id") Long crewId,
@@ -69,6 +98,11 @@ public class FlightRestController {
         return new ResponseEntity<>(flight, HttpStatus.CREATED);
     }
 
+    /**
+     * Удаление рейса (Deleting of flight)
+     * @param id ID рейса (Flight's id)
+     * @return Статус ответа (Response status)
+     */
     @DeleteMapping("/delete")
     public ResponseEntity<Flight> delete(@RequestParam("id") Long id) {
         flightService.delete(id);

@@ -20,16 +20,31 @@ public class CrewService {
         this.employeeRepository = employeeRepository;
     }
 
+    /**
+     * Получение всех экипажей из БД (Getting all crews from Database)
+     *
+     * @return Возвращает список экипажей(Return List of crews)
+     */
     @Transactional
     public List<Crew> getAllCrew() {
         return crewRepository.findAll();
     }
 
+    /**
+     * Получение экипажа по ID (Getting the crew by ID)
+     *
+     * @param id ID экипажа (Crew's ID)
+     * @return Объект экипажа (The object of crew)
+     */
     @Transactional
     public Crew getById(Long id) {
         return crewRepository.findById(id).orElse(null);
     }
 
+    /**
+     * Удаляет экипаж из БД (Delete crew from Database)
+     * @param id ID экипажа (Crew's ID)
+     */
     @Transactional
     public void delete(Long id) {
         for (Employee e : employeeRepository.getEmployeeOfCrew(id)) {
@@ -38,6 +53,14 @@ public class CrewService {
         crewRepository.deleteById(id);
     }
 
+    /**
+     * Создает и сохраняет в БД новый экипаж и связывает с необходимыми работниками из таблицы работников
+     * (Create and save in Database new crew and connect with necessary employees from table employee)
+     * @param name1 Имя первого работника (The name of first employee)
+     * @param name2 Имя второго работника (The name of second employee)
+     * @param lastName1 Фамилия первого работника (The surname of first employee)
+     * @param lastName2 Фамилия второго работника (The surname of second employee)
+     */
     @Transactional
     public void save(String name1, String name2, String lastName1, String lastName2) {
         Crew crew = new Crew();

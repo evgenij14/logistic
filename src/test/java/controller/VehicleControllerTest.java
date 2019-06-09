@@ -1,6 +1,6 @@
 package controller;
 
-import com.task.logistic.controller.rest.VehicleRestController;
+import com.task.logistic.controller.VehicleRestController;
 import com.task.logistic.entity.Vehicle;
 import com.task.logistic.service.VehicleService;
 import org.junit.Test;
