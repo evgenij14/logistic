@@ -1,16 +1,17 @@
-package entity;
+package com.task.logistic.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "client")
-public class Client {
+public class Client implements Serializable {
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "client_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @NotNull
@@ -24,6 +25,7 @@ public class Client {
     @Column(name = "last_name")
     private String lastname;
 
+    @NotNull
     @Size(max = 128)
     @Column(name = "address")
     private String address;
@@ -32,18 +34,17 @@ public class Client {
     @Column(name = "payment")
     private int payment;
 
-    @OneToOne(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "client", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private Flight flight;
 
     public Client() {
     }
 
-    public Client(String name, String lastname, String address, int payment, Flight flight) {
+    public Client(String name, String lastname, String address, int payment) {
         this.name = name;
         this.lastname = lastname;
         this.address = address;
         this.payment = payment;
-        this.flight = flight;
     }
 
     public Long getId() {
@@ -120,7 +121,6 @@ public class Client {
                 ", lastname='" + lastname + '\'' +
                 ", address='" + address + '\'' +
                 ", payment=" + payment +
-                ", flight=" + flight +
                 '}';
     }
 }

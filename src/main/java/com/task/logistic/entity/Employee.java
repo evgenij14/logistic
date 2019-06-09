@@ -1,19 +1,21 @@
-package entity;
+package com.task.logistic.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
 @Table(name = "employee")
-public class Employee {
+public class Employee implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @NotNull
+    @Size(max = 32)
     @Column(name = "passport", unique = true)
     private String passport;
 
@@ -43,7 +45,7 @@ public class Employee {
     @Column(name = "salary")
     private int salary;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "crew_id")
     private Crew crew;
 
@@ -151,7 +153,7 @@ public class Employee {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, passport, name, lastName, age, address, placement, salary, crew);
+        return Objects.hash(id, passport, name, lastName, age, address, placement, salary/*, crew*/);
     }
 
     @Override
@@ -165,7 +167,6 @@ public class Employee {
                 ", address='" + address + '\'' +
                 ", placement=" + placement +
                 ", salary=" + salary +
-                ", crew=" + crew +
                 '}';
     }
 }

@@ -1,15 +1,12 @@
 package com.task.logistic.service;
 
-import com.task.logistic.repository.CrewRepository;
+import com.task.logistic.entity.Crew;
+import com.task.logistic.entity.Employee;
 import com.task.logistic.repository.EmployeeRepository;
-import entity.Crew;
-import entity.Employee;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class EmployeeService {
@@ -19,29 +16,48 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-
+    @Transactional
     public Employee getById(Long id) {
-        return employeeRepository.getOne(id);
+        return employeeRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public Employee getByNameAndLastName(String name, String lastName) {
         return employeeRepository.findByNameAndLastName(name, lastName);
     }
 
+    @Transactional
     public Employee getByPassport(String passport) {
         return employeeRepository.findByPassport(passport);
     }
 
-    public List<Employee> getAll() {
+    @Transactional
+    public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
     }
 
-    public void save(String passport, String name, String lastName, int age, String address, int salary) {
-        LocalDate date = LocalDate.now();
-        employeeRepository.save(new Employee(passport, name, lastName, age, address, date, salary, null));
-    }
-
+    @Transactional
     public void delete(Long id) {
         employeeRepository.delete(getById(id));
+    }
+
+    @Transactional
+    public List<Employee> getEmployeeInOneCrew(Long id) {
+        return employeeRepository.getEmployeeOfCrew(id);
+    }
+
+    @Transactional
+    public void save(Employee e) {
+        employeeRepository.save(e);
+    }
+
+    @Transactional
+    public void update(String name, String lastname, Crew crew) {
+        employeeRepository.update(crew.getId(), name, lastname);
+    }
+
+    @Transactional
+    public void deletingCrew(String name, String lastName) {
+        employeeRepository.deletingCrew(name, lastName);
     }
 }

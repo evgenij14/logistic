@@ -1,39 +1,46 @@
-package entity;
+package com.task.logistic.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "vehicle")
-public class Vehicle {
+public class Vehicle implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "vehicle_id")
     private Long id;
 
+    @NotNull
     @Column(name = "max_speed")
     private int maxSpeed;
 
+    @NotNull
+    @Size(max = 16)
     @Column(name = "numberplate", unique = true)
     private String numberplate;
 
+    @NotNull
     @Column(name = "carrying")
     private int carrying;
 
     @Column(name = "gas_mileage")
     private int gasMileage;
 
-    @OneToOne(mappedBy = "vehicle", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "vehicle", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Flight flight;
 
     public Vehicle() {
     }
 
-    public Vehicle(int maxSpeed, String numberplate, int carrying, int gasMileage, Flight flight) {
+    public Vehicle(int maxSpeed, String numberplate, int carrying, int gasMileage) {
         this.maxSpeed = maxSpeed;
         this.numberplate = numberplate;
         this.carrying = carrying;
         this.gasMileage = gasMileage;
-        this.flight = flight;
     }
 
     public Long getId() {
@@ -74,14 +81,6 @@ public class Vehicle {
 
     public void setGasMileage(int gasMileage) {
         this.gasMileage = gasMileage;
-    }
-
-    public Flight getFlight() {
-        return flight;
-    }
-
-    public void setFlight(Flight flight) {
-        this.flight = flight;
     }
 
     @Override

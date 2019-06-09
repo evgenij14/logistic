@@ -1,8 +1,11 @@
 package com.task.logistic.service;
 
+import com.task.logistic.entity.Client;
 import com.task.logistic.repository.ClientRepository;
-import entity.Client;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class ClientService {
@@ -12,20 +15,29 @@ public class ClientService {
         this.clientRepository = clientRepository;
     }
 
+    @Transactional
     public Client getById(Long id) {
-        return clientRepository.getOne(id);
+        return clientRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public Client getByNameAndLastName(String name, String lastName) {
         return clientRepository.findClientByNameAndLastname(name, lastName);
     }
 
-    public void add(String name, String lastName, String address, int payment) {
-        clientRepository.save(new Client(name, lastName, address, payment, null));
+    @Transactional
+    public void delete(Long id) {
+        clientRepository.deleteById(id);
     }
 
-    public void delete(Long id) {
-        clientRepository.delete(clientRepository.getOne(id));
+    @Transactional
+    public List<Client> getAllClients() {
+        return clientRepository.findAll();
+    }
+
+    @Transactional
+    public void save(Client client) {
+        clientRepository.save(client);
     }
 
 }

@@ -1,6 +1,8 @@
-package entity;
+package com.task.logistic.entity;
+
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -8,22 +10,23 @@ import java.util.stream.Stream;
 
 @Entity
 @Table(name = "crew")
-public class Crew {
+public class Crew implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "crew_id")
     private Long id;
 
-    @OneToMany(mappedBy = "crew", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "crew", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private Flight flight;
+
+    @OneToMany(mappedBy = "crew", fetch = FetchType.LAZY)
     private Set<Employee> employees;
 
-    @OneToOne(mappedBy = "crew", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Flight flight;
 
     public Crew() {
     }
 
-    public Crew(Flight flight, Employee... employees) {
-        this.flight = flight;
+    public Crew(Employee... employees) {
         this.employees = Stream.of(employees).collect(Collectors.toSet());
         this.employees.forEach(x -> x.setCrew(this));
     }
@@ -71,7 +74,6 @@ public class Crew {
     public String toString() {
         return "Crew{" +
                 "id=" + id +
-                ", employees=" + employees +
                 ", flight=" + flight +
                 '}';
     }

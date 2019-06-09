@@ -1,6 +1,6 @@
 package com.task.logistic.repository;
 
-import entity.Client;
+import com.task.logistic.entity.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,42 +1,46 @@
-package entity;
+package com.task.logistic.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
 @Table(name = "flight")
-public class Flight {
+public class Flight implements Serializable {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @NotNull
+    @OneToOne()
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @NotNull
+    @OneToOne()
     @JoinColumn(name = "crew_id")
     private Crew crew;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @OneToOne()
     @JoinColumn(name = "client_id")
     private Client client;
 
     @NotNull
     @Column(name = "sending")
-    private LocalDateTime sending;
+    private Timestamp sending;
 
     @NotNull
     @Column(name = "getting")
-    private LocalDateTime getting;
+    private Timestamp getting;
 
     public Flight() {
     }
 
-    public Flight(Vehicle vehicle, Crew crew, Client client, LocalDateTime sending, LocalDateTime getting) {
+    public Flight(Vehicle vehicle, Crew crew, Client client, Timestamp sending, Timestamp getting) {
         this.vehicle = vehicle;
         this.crew = crew;
         this.client = client;
@@ -76,19 +80,19 @@ public class Flight {
         this.client = client;
     }
 
-    public LocalDateTime getSending() {
+    public Timestamp getSending() {
         return sending;
     }
 
-    public void setSending(LocalDateTime sending) {
+    public void setSending(Timestamp sending) {
         this.sending = sending;
     }
 
-    public LocalDateTime getGetting() {
+    public Timestamp getGetting() {
         return getting;
     }
 
-    public void setGetting(LocalDateTime getting) {
+    public void setGetting(Timestamp getting) {
         this.getting = getting;
     }
 
